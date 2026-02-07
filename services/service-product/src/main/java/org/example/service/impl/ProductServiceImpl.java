@@ -5,6 +5,7 @@ import org.example.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -15,6 +16,12 @@ public class ProductServiceImpl implements ProductService {
         product.setId(productId);
         product.setNum(123);
         product.setPrice(new BigDecimal(12.34));
+//
+//        try {
+//            TimeUnit.SECONDS.sleep(100);
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        }
 
         return product;
     }

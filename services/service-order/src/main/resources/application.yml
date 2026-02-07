@@ -3,7 +3,8 @@ server:
 
 spring:
   profiles:
-    active: test
+    active: prod
+    include: feign
   application:
     name: service-order
   cloud:
@@ -13,6 +14,9 @@ spring:
         import-check:
           enabled: false
         namespace: ${spring.profiles.active:public}
+logging:
+  level:
+    org.example: debug
 
 
 ---

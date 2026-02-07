@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.product.bean.Product;
 import org.example.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,8 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/product/{id}")
-    public Product getProduct(@PathVariable("id") Long productId) {
-
+    public Product getProduct(@PathVariable("id") Long productId, HttpServletRequest request) {
+        System.out.println(request.getHeader("X-Token"));
         Product product =productService.getProductById(productId);
 
         return product;

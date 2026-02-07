@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.feign.ProductFeignClient;
 import org.example.order.bean.Order;
 import org.example.product.bean.Product;
 import org.example.service.OrderService;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,12 +26,14 @@ public class OrderServiceImpl implements OrderService {
     RestTemplate restTemplate;
     @Autowired
     LoadBalancerClient loadBalancerClient;
+    @Autowired
+    ProductFeignClient productFeignClient;
 
     @Override
     public Order createOrder(Long productId, Long userId) {
         //远程获取商品数据
-        Product product = getProductFromRemote(productId);
-
+       // Product product = getProductFromRemote(productId);
+        Product product =productFeignClient.getProductById(productId);
 
         Order order = new Order();
         order.setUserId(userId);
