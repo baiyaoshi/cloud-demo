@@ -1,5 +1,8 @@
 package org.example.controller;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import lombok.extern.slf4j.Slf4j;
 import org.example.order.bean.Order;
 import org.example.properties.OrderProperties;
 import org.example.service.OrderService;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 //@RefreshScope
 public class OrderController {
@@ -33,7 +37,37 @@ public class OrderController {
     public Order createOrder(@RequestParam("userId") Long userId,
                              @RequestParam("productId") Long productId) {
         Order order =orderService.createOrder(productId, userId);
-
         return order;
     }
+
+    @SentinelResource(value = "seckill-order",fallback = "seckillFallBack")
+    @GetMapping("/secKill")
+    public Order secKill(@RequestParam("userId") Long userId,
+                             @RequestParam("productId") Long productId) {
+        Order order =orderService.createOrder(productId, userId);
+        order.setId(Long.MAX_VALUE);
+        return order;
+    }
+    public Order seckillFallBack( Long userId,
+                              Long productId,
+                                 Throwable exception) {
+        System.out.println("seckill兜底回调");
+        Order order =new Order();
+        order.setId(productId);
+        order.setUserId(userId);
+        order.setAddress(exception.getClass().getSimpleName());
+        return order;
+    }
+
+
+    @GetMapping("/writeDb")
+    public String writeDb(){
+        return "write success";
+    }
+
+    @GetMapping("readDb")
+    public String readDb(){
+        return "read success";
+    }
+
 }

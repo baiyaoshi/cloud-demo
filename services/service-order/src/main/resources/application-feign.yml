@@ -12,6 +12,11 @@ spring:
             connect-timeout: 3000
             read-timeout: 5000
             #retryer: feign.Retryer.Default
+    sentinel:
+      transport:
+        dashboard: localhost:8080
+      eager: true #提前加载
+      web-context-unify: false #设置为分割web上下文
 feign:
   sentinel:
     enabled: true

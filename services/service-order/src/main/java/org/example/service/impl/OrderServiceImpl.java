@@ -1,5 +1,7 @@
 package org.example.service.impl;
 
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
 import org.example.feign.ProductFeignClient;
 import org.example.order.bean.Order;
@@ -29,6 +31,8 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     ProductFeignClient productFeignClient;
 
+
+    @SentinelResource(value = "createOrder",blockHandler = "createOrderFallBack")
     @Override
     public Order createOrder(Long productId, Long userId) {
         //远程获取商品数据
@@ -44,6 +48,19 @@ public class OrderServiceImpl implements OrderService {
         order.setTotalAmount(product.getPrice().multiply(new BigDecimal(product.getNum())));
         return order;
     }
+
+    //兜底回调
+    public Order createOrderFallBack(Long productId, Long userId, BlockException e) {
+        Order order = new Order();
+        order.setUserId(userId);
+        order.setAddress("异常信息"+e.getClass().getSimpleName());
+        order.setId(1l);
+        order.setNickName("未知用户");
+        order.setTotalAmount(new BigDecimal("0"));
+        order.setProductList(null);
+        return order;
+    }
+
 
     //远程获取订单
     private Product getProductFromRemote(Long productId){
