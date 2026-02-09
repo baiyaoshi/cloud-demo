@@ -5,6 +5,8 @@ import org.example.product.bean.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
 
 @FeignClient(value = "service-product",fallback = ProductFeignClientFallBack.class)//自动调用微服务
 public interface ProductFeignClient {

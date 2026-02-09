@@ -1,0 +1,10 @@
+spring:
+  profiles:
+    include: route
+  application:
+    name: gateway
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+server:
+  port: 80
